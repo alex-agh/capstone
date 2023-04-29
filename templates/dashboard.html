@@ -1,0 +1,30 @@
+{% extends 'account/base.html' %}
+
+{% block scripts %}
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <h1 class="mb-5 fw-bold">C# Practice</h1>
+    {% for task in coding_tasks %}
+    <div class="card rounded-3 mb-5">
+        <div class="card-body px-4 row">
+            <div class="col-10">
+                <h3 class="mb-0 fw-bold">Problem {{ task.id }}</h3>
+                <p class="mb-0 fw-light">{{ task.description }}</p>
+            </div>
+            <div class="col-2 my-auto d-flex justify-content-end">
+                <a href="{% url 'task_completion' task.id %}" class="btn btn-success mb-0">Complete Task</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>  
+
+<style>
+    .container {
+        margin-top: 10%;
+    }
+</style>
+{% endblock %}
