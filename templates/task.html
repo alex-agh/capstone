@@ -3,7 +3,6 @@
 {% load static %}
 
 {% block scripts %}
-
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.28.0/min/vs/editor/editor.main.js"></script>  
@@ -22,7 +21,99 @@
 
     initEditor(lines).then(function(editor) {
         editor.setValue(initialCode);
+
+        document.getElementById('executeButton').addEventListener('click', function() {
+            // Get the code from the editor
+            var code = editor.getValue();
+        
+            const csrftoken = getCookie('csrftoken');
+        
+            $.ajax({
+                url: '{% url "run-code" %}',
+                method: 'POST',
+                data: {
+                    code: code,
+                    task: '{{ task.id }}',
+                    csrfmiddlewaretoken: csrftoken
+                },
+                success: function(response) {
+                    console.log(response.output);
+                },
+                error: function(xhr, status, error) {
+                    console.log(error);
+                }
+            });
+        });
+
+        document.getElementById('run-btn').addEventListener('click', function() {
+            // Get the code from the editor
+            var code = editor.getValue();
+        
+            const csrftoken = getCookie('csrftoken');
+            const outputTextarea = document.getElementById('output');
+            
+            $.ajax({
+                url: '{% url "test-code" %}',
+                method: 'POST',
+                data: {
+                    code: code,
+                    task: '{{ task.id }}',
+                    csrfmiddlewaretoken: csrftoken
+                },
+                
+                success: function(data) {
+                    // Display the output in the output textarea
+                    outputTextarea.value = data.output;
+                },
+                
+                error: function(xhr, status, error) {
+                    console.log(error);
+                }
+            });
+        });
     })
+
+    // const runBtn = document.getElementById('run-btn');
+    // const outputTextarea = document.getElementById('output');
+
+    // // Add an event listener to the run button
+    // runBtn.addEventListener('click', () => {
+    // // Get the code from the editor
+    // var code = editor.getValue();
+    
+    // const csrftoken = getCookie('csrftoken');
+    // // Make an AJAX request to the test_code view with the user input code
+    // $.ajax({
+    //     url: "{% url 'test-code' %}",
+    //     method: "POST",
+    //     data: {
+    //         code: code,
+    //         task: '{{ task.id }}',
+    //         csrfmiddlewaretoken: csrftoken
+    //     },
+    //     success: function(data) {
+    //     // Display the output in the output textarea
+    //     outputTextarea.value = data.output;
+    //     }
+    // });
+    // });
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+    
+        return cookieValue;
+    }
 </script>
 
 <div class="container-fluid">
@@ -36,8 +127,12 @@
         </div>
         <div class="col">
             <div id="editorContainer"></div>
-
-            <button class="btn btn-success mt-3" id="executeButton">Submit</button>
+            <button class="btn btn-primary mt-3" id="run-btn">Run</button>
+            <button class="btn btn-success ms-2 mt-3" id="executeButton">Submit</button>
+            {% if task_completed %}
+            <span class="text-success ms-3 mt-3">Completed!</span>
+            {% endif %}
+            <textarea id="output" class="form-control mt-3" rows="10" readonly></textarea>
         </div>
     </div>
 </div>
@@ -48,12 +143,20 @@
         width: 800px;
     }
 
+    #output {
+        width: 800px;
+    }
+
     .main {
         margin-top: 10%;
     } 
 
     .card {
         background-color: rgb(252, 252, 252);
+    }
+
+    body {
+        margin-bottom: 100px;
     }
 </style> 
 

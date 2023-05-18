@@ -44,8 +44,16 @@
     </button>
 
     <div class="collapse navbar-collapse" id="navbarNav">
+    {% if user.is_authenticated %}
+    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+      <li class="nav-item">
+        <a class="nav-link disabled">Hello, {{ user.username }}!</a>
+      </li>
+    </ul>
+    {% endif %}
     <ul class="main_menu_items navbar-nav ms-auto">
       {% if user.is_authenticated %}
+      <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
       <li><a href="{% url 'account_logout' %}">Sign Out</a></li>
       {% else %}
       <li><a href="{% url 'account_login' %}">Sign In</a></li>

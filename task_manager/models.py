@@ -8,7 +8,7 @@ def delete_files(sender, instance, **kwargs):
     if instance.test_file:
         os.remove(instance.test_file.path)
     if instance.initial_file:
-        os.remove(instance.test_file.path)
+        os.remove(instance.initial_file.path)
 
 class CodingTask(models.Model):
     description = models.CharField(max_length=200)

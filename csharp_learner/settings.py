@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'dashboard', 
     'task_manager',
+    'accounts',
 ]
 
 MARKDOWNIFY_STRIP = False
