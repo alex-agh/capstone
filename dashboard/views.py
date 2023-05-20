@@ -110,7 +110,7 @@ def run_code(request):
 
         if result.returncode != 0:
             # Compilation failed, return the error message
-            return JsonResponse({'error': result.stderr})
+            return JsonResponse({'error': 'Something went wrong when compiling the script, make sure not to change the initial code.'})
 
         # Execute the compiled code using mono
         execute_cmd = ['mono', 'program.exe']
@@ -129,12 +129,13 @@ def run_code(request):
             user_profile = UserProfile.objects.get(user=request.user)
         except UserProfile.DoesNotExist:
             user_profile = UserProfile.objects.create(user=request.user)
-
-        if output == '1':
+        
+        if output == '1':            
             user_profile = UserProfile.objects.get(user=request.user)
             completed_tasks = user_profile.completed_tasks.all()
             if task not in completed_tasks:
                 user_profile.completed_tasks.add(CodingTask.objects.get(id=task_id))
-
-        return JsonResponse({'output': output, 'error': result.stderr})
+            
+            return JsonResponse({'output': "Task Completed!"})
+        return JsonResponse({'output': "Try Again!"})
     return JsonResponse({'error': 'Invalid request method'})

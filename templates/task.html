@@ -38,6 +38,7 @@
                 },
                 success: function(response) {
                     console.log(response.output);
+                    alert(response.output);
                 },
                 error: function(xhr, status, error) {
                     console.log(error);
@@ -72,32 +73,7 @@
             });
         });
     })
-
-    // const runBtn = document.getElementById('run-btn');
-    // const outputTextarea = document.getElementById('output');
-
-    // // Add an event listener to the run button
-    // runBtn.addEventListener('click', () => {
-    // // Get the code from the editor
-    // var code = editor.getValue();
     
-    // const csrftoken = getCookie('csrftoken');
-    // // Make an AJAX request to the test_code view with the user input code
-    // $.ajax({
-    //     url: "{% url 'test-code' %}",
-    //     method: "POST",
-    //     data: {
-    //         code: code,
-    //         task: '{{ task.id }}',
-    //         csrfmiddlewaretoken: csrftoken
-    //     },
-    //     success: function(data) {
-    //     // Display the output in the output textarea
-    //     outputTextarea.value = data.output;
-    //     }
-    // });
-    // });
-
     function getCookie(name) {
         let cookieValue = null;
         if (document.cookie && document.cookie !== '') {
